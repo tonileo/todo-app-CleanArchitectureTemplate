@@ -20,9 +20,13 @@ public class ToDoItemController : Controller
         {
             await _sender.Send(command, cancellationToken);
         }
-        catch (ValidationException)
+        catch (ValidationException ex)
         {
             // Set all error messages as single string to TempData["Errors"] variable
+            foreach (var error in ex.Errors)
+            {
+                TempData["Errors"] = string.Join(", ", error.Value);
+            }
         }
 
         return Redirect("/");
